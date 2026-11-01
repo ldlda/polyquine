@@ -1,17 +1,15 @@
-#![doc = r#"
+#[doc = r#"
 rust = r"""
 "#]
 fn main() {
-    let (head, body) = ("#![doc = r#\"\nrust = r\"\"\"\n\"#]\nfn main() {\n    let (head, body) = ", "    println!(\"{head}({head:?}, {body:?});\\n{body}{REAL}\\\"#;\");\n}\nconst REAL: &'static str = r#\"");
-    println!("{head}({head:?}, {body:?});\n{body}{REAL}\"#;");
+    let (head, body) = ("#[doc = r#\"\nrust = r\"\"\"\n\"#]\nfn main() {\n    let (head, body) = ", ";\n    println!(\"{head}{:?}{body}{REAL}\\\"#;\", (head, body))\n}\nconst REAL: &str = r#\"");
+    println!("{head}{:?}{body}{REAL}\"#;", (head, body))
 }
-const REAL: &'static str = r#"""
-p = """{d}
-rust = r{triple}{rust}{triple}
-p = {triple}{p}{triple}
-print(p.format(p=p, d={d!r}, rust=rust, triple={triple!r}))
-{triple}
-{triple}#;"""
-print(p.format(p=p, d='#![doc = r#"', rust=rust, triple='"""'))
-"""
-"""#;
+const REAL: &str = r#"""
+p = """{0}
+rust = r{2}{1}{2}
+p = {2}{3}{2}
+print(p.format({0!r}, rust, {2!r}, p))
+#{2:.1}#;"""
+print(p.format('#[doc = r#"', rust, '"""', p))
+#"#;
