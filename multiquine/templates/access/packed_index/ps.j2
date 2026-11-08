@@ -1,0 +1,2 @@
+$source = $DATA.Split("`n@@LDA_STAGE@@`n", [System.StringSplitOptions]::None)[$index]
+$encoded = [string](& $RENDERERS[$how] $DATA)

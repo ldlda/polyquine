@@ -1,0 +1,4 @@
+<?php
+$RENDERERS = [];
+{{ snippets }}
+fwrite(STDOUT, $RENDERERS['{{ how }}'](stream_get_contents(STDIN)));

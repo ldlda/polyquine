@@ -1,0 +1,16 @@
+fun main(args: Array<String>) {
+    val allowed = setOf({% for t in targets %}"{{ t.id }}", {% endfor %})
+{% if targets|length == 1 %}
+    val target = "{{ targets[0].id }}"
+{% else %}
+    val target = args.firstOrNull() ?: "{{ default.id }}"
+{% endif %}
+    require(target in allowed) { "Unknown target" }
+    val token = Regex("LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)")
+    val code = token.replace(W.getValue(target)) { match ->
+        val language = match.groupValues[1]
+        val how = match.groupValues[2]
+        RENDERERS.getValue(how)(W.getValue(language))
+    }
+    System.out.write(code.toByteArray(Charsets.UTF_8))
+}

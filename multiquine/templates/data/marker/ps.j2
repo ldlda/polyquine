@@ -1,0 +1,5 @@
+$W = @{
+{% for language in languages %}
+    "{{ language.id }}" = {{ language | content }}
+{% endfor %}
+}

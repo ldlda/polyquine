@@ -1,0 +1,4 @@
+        names = [{% for t in languages %}"{{ t.id }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+        named = zip names parts
+        source = maybe (error "Unknown source") id (lookup (names !! index) named)
+        encoded = render how seed

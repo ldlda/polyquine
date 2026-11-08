@@ -1,0 +1,6 @@
+# LDA_REQUIRES: json
+$RENDERERS['json_inner'] = {
+    param([string]$s)
+    $quoted = [string](& $RENDERERS['json'] $s)
+    $quoted.Substring(1, $quoted.Length - 2)
+}

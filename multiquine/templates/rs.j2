@@ -1,0 +1,10 @@
+use std::collections::HashMap;
+use std::io::{self, Write};
+type Renderer = fn(&str) -> String;
+{% include "data/" ~ strategy.storage ~ "/rs.j2" %}
+fn renderers() -> HashMap<&'static str, Renderer> {
+    let mut renderers: HashMap<&str, Renderer> = HashMap::new();
+{{ renderers | file_import }}
+    renderers
+}
+{% include "emit/" ~ strategy.storage ~ "/rs.j2" %}

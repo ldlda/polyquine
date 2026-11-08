@@ -1,0 +1,12 @@
+    const struct { const char *name; Text content; } sources[] = {
+{% for t in languages %}
+        {"{{ t.id }}", parts[{{ positions[t.id] }}]},
+{% endfor %}
+    };
+    const char *names[] = { {% for t in languages %}"{{ t.id }}", {% endfor %} };
+    size_t source_index;
+    for (source_index = 0; source_index < sizeof(sources) / sizeof(*sources); ++source_index)
+        if (strcmp(names[index], sources[source_index].name) == 0) break;
+    if (source_index == sizeof(sources) / sizeof(*sources)) fail("Unknown source");
+    Text source = sources[source_index].content;
+    Text encoded = get_renderer(how)(seed);

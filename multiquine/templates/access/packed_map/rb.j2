@@ -1,0 +1,4 @@
+parts = DATA.split("\n@@LDA_STAGE@@\n")
+sources = {{ languages | map(attribute="id") | list | tojson }}.zip(parts).to_h
+source = sources.fetch({{ languages | map(attribute="id") | list | tojson }}[index])
+encoded = RENDERERS[how].call(DATA)

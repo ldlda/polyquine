@@ -1,0 +1,13 @@
+module Main where
+import Data.Char (chr, ord)
+import Numeric (showHex)
+import System.IO (hSetBinaryMode, hPutStr, stdin, stdout)
+render :: String -> String -> String
+{{ snippets }}
+render name _ = error ("Unknown renderer: " ++ name)
+main :: IO ()
+main = do
+    hSetBinaryMode stdin True
+    hSetBinaryMode stdout True
+    value <- getContents
+    hPutStr stdout (render "{{ how }}" value)

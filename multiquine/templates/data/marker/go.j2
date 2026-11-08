@@ -1,0 +1,5 @@
+var W = map[string]string{
+{% for language in languages %}
+    "{{ language.id }}": {{ language | content }},
+{% endfor %}
+}

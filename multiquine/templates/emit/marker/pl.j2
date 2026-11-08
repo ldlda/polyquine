@@ -1,0 +1,17 @@
+my $allowed = {
+{% for t in targets %}
+    "{{ t.id }}" => 1,
+{% endfor %}
+};
+{% if targets|length == 1 %}
+my $target = "{{ targets[0].id }}";
+{% else %}
+my $target = $ARGV[0] // "{{ default.id }}";
+{% endif %}
+die "Unknown target" unless $allowed->{$target};
+my $code = $W->{$target};
+$code =~ s{LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)}{
+    die "Invalid reference" unless exists $W->{$1} && exists $RENDERERS->{$2};
+    $RENDERERS->{$2}->($W->{$1})
+}ge;
+print $code;

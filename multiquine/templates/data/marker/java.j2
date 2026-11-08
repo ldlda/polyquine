@@ -1,0 +1,6 @@
+    static final Map<String, String> W = Map.ofEntries(
+{% for t in languages %}
+        Map.entry("{{ t.id }}", {{ t | content }}){% if not loop.last %},{% endif %}
+
+{% endfor %}
+    );

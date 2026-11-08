@@ -1,0 +1,43 @@
+fn ident_start(b: u8) -> bool { b.is_ascii_lowercase() }
+fn ident(b: u8) -> bool { ident_start(b) || b.is_ascii_digit() || b == b'_' }
+
+fn oro(target: &str) -> String {
+    let w = templates();
+    let r = renderers();
+    assert!([{% for t in targets %}"{{ t.id }}",{% endfor %}].contains(&target), "Unknown target");
+    let source = w.get(target).expect("Unknown language");
+    let bytes = source.as_bytes();
+    let mut result = String::new();
+    let mut copied = 0;
+    let mut i = 0;
+    while i + 4 <= bytes.len() {
+        if &bytes[i..i+4] != b"LDA:" { i += 1; continue; }
+        let start = i + 4;
+        let mut colon = start;
+        while colon < bytes.len() && ident(bytes[colon]) { colon += 1; }
+        if colon == start || !ident_start(bytes[start]) || bytes.get(colon) != Some(&b':') {
+            i += 1; continue;
+        }
+        let how = colon + 1;
+        let mut end = how;
+        while end < bytes.len() && ident(bytes[end]) { end += 1; }
+        if end == how || !ident_start(bytes[how]) { i += 1; continue; }
+        result.push_str(&source[copied..i]);
+        let template = w.get(&source[start..colon]).expect("Unknown template");
+        let quote = r.get(&source[how..end]).expect("Unknown renderer");
+        result.push_str(&quote(template));
+        i = end;
+        copied = end;
+    }
+    result.push_str(&source[copied..]);
+    result
+}
+
+fn main() {
+{% if targets|length == 1 %}
+    let target = String::from("{{ targets[0].id }}");
+{% else %}
+    let target = std::env::args().nth(1).unwrap_or_else(|| "{{ default.id }}".into());
+{% endif %}
+    io::stdout().write_all(oro(&target).as_bytes()).unwrap();
+}

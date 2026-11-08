@@ -1,0 +1,13 @@
+{% if targets|length == 1 %}
+index, how = {{ positions[targets[0].id] }}, "{{ targets[0].renderer }}"
+{% else %}
+TARGETS = {
+{% for t in targets %}
+    "{{ t.id }}": ({{ positions[t.id] }}, "{{ t.renderer }}"),
+{% endfor %}
+}
+index, how = TARGETS[sys.argv[1] if len(sys.argv) > 1 else "{{ default.id }}"]
+{% endif %}
+{% include "access/" ~ strategy.access ~ "/py.j2" %}
+code = source.replace("@@LDA_" + "DATA@@", encoded)
+sys.stdout.buffer.write(code.encode("utf-8"))

@@ -1,0 +1,20 @@
+{% if targets|length == 1 %}
+local index, how = {{ positions[targets[0].id] + 1 }}, "{{ targets[0].renderer }}"
+{% else %}
+local targets = {
+{% for t in targets %}
+    ["{{ t.id }}"] = { {{ positions[t.id] + 1 }}, "{{ t.renderer }}" },
+{% endfor %}
+}
+local target = targets[arg[1] or "{{ default.id }}"]
+if not target then error("Unknown target") end
+local index, how = target[1], target[2]
+{% endif %}
+local separator = "\n@@LDA_STAGE@@\n"
+local parts = {}
+for part in (DATA .. separator):gmatch("(.-)" .. separator) do
+    parts[#parts + 1] = part
+end
+{% include "access/" ~ strategy.access ~ "/lua.j2" %}
+local code = source:gsub("@@LDA_" .. "DATA@@", function() return encoded end)
+io.write(code)

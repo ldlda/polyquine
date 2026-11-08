@@ -1,0 +1,19 @@
+{% if targets|length == 1 %}
+my ($index, $how) = ({{ positions[targets[0].id] }}, "{{ targets[0].renderer }}");
+{% else %}
+my $targets = {
+{% for t in targets %}
+    "{{ t.id }}" => [{{ positions[t.id] }}, "{{ t.renderer }}"],
+{% endfor %}
+};
+my $target = $targets->{$ARGV[0] // "{{ default.id }}"} or die "Unknown target";
+my ($index, $how) = @$target;
+{% endif %}
+my $separator = "
+" . '@@LDA_STAGE@@' . "
+";
+my @parts = split /\Q$separator\E/, $DATA, -1;
+{% include "access/" ~ strategy.access ~ "/pl.j2" %}
+my $slot = '@@LDA_' . 'DATA@@';
+$source =~ s/\Q$slot\E/$encoded/g;
+print $source;

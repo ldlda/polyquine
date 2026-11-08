@@ -1,0 +1,20 @@
+main :: IO ()
+main = do
+{% if targets|length == 1 %}
+    let (index, how) = ({{ positions[targets[0].id] }}, "{{ targets[0].renderer }}")
+{% else %}
+    args <- getArgs
+    let targets = [
+{% for t in targets %}
+            ("{{ t.id }}", ({{ positions[t.id] }}, "{{ t.renderer }}")){% if not loop.last %},{% endif %}
+
+{% endfor %}
+            ]
+        target = if null args then "{{ default.id }}" else head args
+        (index, how) = maybe (error "Unknown target") id (lookup target targets)
+{% endif %}
+        parts = splitOn "\n@@LDA_STAGE@@\n" seed
+{% include "access/" ~ strategy.access ~ "/hs.j2" %}
+        code = intercalate encoded (splitOn ("@@LDA_" ++ "DATA@@") source)
+    hSetBinaryMode stdout True
+    hPutStr stdout code

@@ -1,0 +1,30 @@
+expand :: String -> String
+expand [] = []
+expand input
+    | "LDA:" `isPrefixOf` input =
+        let (language, rest) = span ident (drop 4 input)
+        in case rest of
+            ':' : more ->
+                let (how, suffix) = span ident more
+                in if valid language && valid how
+                    then render how (maybe (error "Unknown source") id (lookup language sources)) ++ expand suffix
+                    else fallback
+            _ -> fallback
+    | otherwise = fallback
+    where
+        ident c = isAsciiLower c || isDigit c || c == '_'
+        valid word = not (null word) && isAsciiLower (head word)
+        fallback = head input : expand (tail input)
+
+main :: IO ()
+main = do
+{% if targets|length == 1 %}
+    let target = "{{ targets[0].id }}"
+{% else %}
+    args <- getArgs
+    let target = if null args then "{{ default.id }}" else head args
+{% endif %}
+        allowed = [{% for t in targets %}"{{ t.id }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+    if target `elem` allowed then return () else error "Unknown target"
+    hSetBinaryMode stdout True
+    hPutStr stdout (expand (maybe (error "Unknown source") id (lookup target sources)))

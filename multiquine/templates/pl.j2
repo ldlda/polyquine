@@ -1,0 +1,10 @@
+use strict;
+use warnings;
+{% if 'json' in renderers %}
+use JSON::PP ();
+{% endif %}
+my $RENDERERS = {};
+{{ renderers | file_import }}
+{% include "data/" ~ strategy.storage ~ "/pl.j2" %}
+binmode STDOUT, ':raw';
+{% include "emit/" ~ strategy.storage ~ "/pl.j2" %}

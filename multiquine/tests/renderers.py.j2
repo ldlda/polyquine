@@ -1,0 +1,6 @@
+import json
+import sys
+RENDERERS = {}
+{{ snippets }}
+value = sys.stdin.buffer.read().decode("ascii")
+sys.stdout.buffer.write(RENDERERS["{{ how }}"](value).encode("utf-8"))

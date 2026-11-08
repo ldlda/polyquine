@@ -1,0 +1,14 @@
+{% if targets|length == 1 %}
+index, how = {{ positions[targets[0].id] }}, "{{ targets[0].renderer }}"
+{% else %}
+targets = {
+{% for t in targets %}
+    "{{ t.id }}" => [{{ positions[t.id] }}, "{{ t.renderer }}"],
+{% endfor %}
+}
+index, how = targets.fetch(ARGV[0] || "{{ default.id }}")
+{% endif %}
+{% include "access/" ~ strategy.access ~ "/rb.j2" %}
+code = source.gsub("@@LDA_" + "DATA@@") { encoded }
+STDOUT.binmode
+STDOUT.write(code)

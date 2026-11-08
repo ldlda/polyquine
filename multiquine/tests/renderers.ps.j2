@@ -1,0 +1,6 @@
+$RENDERERS = @{}
+{{ snippets }}
+$value = [Console]::In.ReadToEnd()
+$code = [string](& $RENDERERS['{{ how }}'] $value)
+$bytes = [Text.Encoding]::UTF8.GetBytes($code)
+[Console]::OpenStandardOutput().Write($bytes, 0, $bytes.Length)

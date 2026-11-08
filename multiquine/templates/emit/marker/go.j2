@@ -1,0 +1,31 @@
+var token = regexp.MustCompile(`LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)`)
+
+
+
+func oro(target string) (string, error) {
+    allowed := map[string]bool{ {% for t in targets %}"{{ t.id }}": true,{% endfor %} }
+    source, ok := W[target]
+    if !ok || !allowed[target] { return "", fmt.Errorf("unknown language: %s", target) }
+    var err error
+    result := token.ReplaceAllStringFunc(source, func(marker string) string {
+        parts := token.FindStringSubmatch(marker)
+        tmpl, exists := W[parts[1]]
+        if !exists { err = fmt.Errorf("unknown template: %s", parts[1]); return "" }
+        quote, exists := renderers[parts[2]]
+        if !exists { err = fmt.Errorf("unknown renderer: %s", parts[2]); return "" }
+        return quote(tmpl)
+    })
+    return result, err
+}
+
+func main() {
+{% if targets|length == 1 %}
+    target := "{{ targets[0].id }}"
+{% else %}
+    target := "{{ default.id }}"
+    if len(os.Args) > 1 { target = os.Args[1] }
+{% endif %}
+    code, err := oro(target)
+    if err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
+    fmt.Print(code)
+}

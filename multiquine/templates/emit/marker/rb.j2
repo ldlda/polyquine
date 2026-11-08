@@ -1,0 +1,16 @@
+TOKEN = /LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)/
+
+
+
+def oro(target = "rb")
+  raise "Unknown language: " + target unless [{% for t in targets %}"{{ t.id }}",{% endfor %}].include?(target)
+  W[target].gsub(TOKEN) do |_whole|
+    language, how = Regexp.last_match.captures
+    raise "Unknown template: " + language unless W.key?(language)
+    raise "Unknown renderer: " + how unless RENDERERS.key?(how)
+    RENDERERS[how].call(W[language])
+  end
+end
+
+STDOUT.binmode
+STDOUT.write({% if targets|length == 1 %}oro("{{ targets[0].id }}"){% else %}oro(ARGV[0] || "{{ default.id }}"){% endif %})

@@ -1,0 +1,22 @@
+    let parts: Vec<&str> = DATA.split("\n@@LDA_STAGE@@\n").collect();
+    let r = renderers();
+{% if strategy.renderer_binding == "callable" %}
+    let entries: &[(&str, &str, Renderer)] = &[
+{% else %}
+    let entries: &[(&str, &str, &str)] = &[
+{% endif %}
+{% for t in languages %}
+{% if strategy.renderer_binding == "callable" %}
+        ("{{ t.id }}", parts[{{ positions[t.id] }}], r["{{ t.renderer }}"]),
+{% else %}
+        ("{{ t.id }}", parts[{{ positions[t.id] }}], "{{ t.renderer }}"),
+{% endif %}
+{% endfor %}
+    ];
+    let (_, source, renderer) = entries[index];
+{% if strategy.renderer_binding == "callable" %}
+    let encoded = renderer(DATA);
+{% else %}
+    let encoded = r[renderer](DATA);
+{% endif %}
+    let _ = how;

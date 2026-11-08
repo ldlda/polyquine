@@ -1,0 +1,22 @@
+    public static void main(String[] args) throws Exception {
+{% if targets|length == 1 %}
+        int index = {{ positions[targets[0].id] }};
+        String how = "{{ targets[0].renderer }}";
+{% else %}
+        record Destination(int index, String how) {}
+        Map<String, Destination> targets = Map.ofEntries(
+{% for t in targets %}
+            Map.entry("{{ t.id }}", new Destination({{ positions[t.id] }}, "{{ t.renderer }}")){% if not loop.last %},{% endif %}
+
+{% endfor %}
+        );
+        Destination target = targets.get(args.length == 0 ? "{{ default.id }}" : args[0]);
+        if (target == null) throw new IllegalArgumentException("Unknown target");
+        int index = target.index();
+        String how = target.how();
+{% endif %}
+        String[] parts = DATA.split("\n@@LDA_STAGE@@\n", -1);
+{% include "access/" ~ strategy.access ~ "/java.j2" %}
+        String code = source.replace("@@LDA_" + "DATA@@", encoded);
+        System.out.write(code.getBytes(StandardCharsets.UTF_8));
+    }

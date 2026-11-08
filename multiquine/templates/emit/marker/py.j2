@@ -1,0 +1,20 @@
+TOKEN = re.compile(r"LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)")
+
+
+
+def oro(target="py"):
+    if target not in ({% for t in targets %}"{{ t.id }}",{% endfor %}):
+        raise ValueError(f"Unknown language: {target}")
+
+    def sub(match):
+        language, how = match.groups()
+        if language not in W:
+            raise ValueError(f"Unknown template: {language}")
+        if how not in RENDERERS:
+            raise ValueError(f"Unknown renderer: {how}")
+        return RENDERERS[how](W[language])
+
+    return TOKEN.sub(sub, W[target])  # Always one-pass
+
+if __name__ == "__main__":
+    sys.stdout.buffer.write({% if targets|length == 1 %}oro("{{ targets[0].id }}"){% else %}oro(sys.argv[1] if len(sys.argv) > 1 else "{{ default.id }}"){% endif %}.encode("utf-8"))

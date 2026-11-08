@@ -1,0 +1,21 @@
+{% if strategy.renderer_binding == 'callable' %}
+    data class Entry(val id: String, val content: String, val renderer: (String) -> String)
+{% else %}
+    data class Entry(val id: String, val content: String, val renderer: String)
+{% endif %}
+    val entries = listOf(
+{% for t in languages %}
+{% if strategy.renderer_binding == 'callable' %}
+        Entry("{{ t.id }}", parts[{{ positions[t.id] }}], RENDERERS.getValue("{{ t.renderer }}")),
+{% else %}
+        Entry("{{ t.id }}", parts[{{ positions[t.id] }}], "{{ t.renderer }}"),
+{% endif %}
+{% endfor %}
+    )
+    val entry = entries[index]
+    val source = entry.content
+{% if strategy.renderer_binding == 'callable' %}
+    val encoded = entry.renderer(DATA)
+{% else %}
+    val encoded = RENDERERS.getValue(entry.renderer)(DATA)
+{% endif %}

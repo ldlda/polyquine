@@ -1,0 +1,15 @@
+my $entries = [
+{% for t in languages %}
+{% if strategy.renderer_binding == 'callable' %}
+    ["{{ t.id }}", $parts[{{ positions[t.id] }}], $RENDERERS->{"{{ t.renderer }}"}],
+{% else %}
+    ["{{ t.id }}", $parts[{{ positions[t.id] }}], "{{ t.renderer }}"],
+{% endif %}
+{% endfor %}
+];
+my ($id, $source, $renderer) = @{$entries->[$index]};
+{% if strategy.renderer_binding == 'callable' %}
+my $encoded = $renderer->($DATA);
+{% else %}
+my $encoded = $RENDERERS->{$renderer}->($DATA);
+{% endif %}

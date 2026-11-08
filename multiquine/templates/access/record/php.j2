@@ -1,0 +1,16 @@
+$parts = explode("\n@@LDA_STAGE@@\n", $DATA);
+$entries = [
+{% for t in languages %}
+{% if strategy.renderer_binding == "callable" %}
+    ["{{ t.id }}", $parts[{{ positions[t.id] }}], $RENDERERS["{{ t.renderer }}"]],
+{% else %}
+    ["{{ t.id }}", $parts[{{ positions[t.id] }}], "{{ t.renderer }}"],
+{% endif %}
+{% endfor %}
+];
+[$id, $source, $renderer] = $entries[$index];
+{% if strategy.renderer_binding == "callable" %}
+$encoded = $renderer($DATA);
+{% else %}
+$encoded = $RENDERERS[$renderer]($DATA);
+{% endif %}

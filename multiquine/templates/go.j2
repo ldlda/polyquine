@@ -1,0 +1,20 @@
+package main
+import (
+    "fmt"
+{% if strategy.storage == 'marker' or targets|length > 1 %}
+    "os"
+{% endif %}
+{% if strategy.storage == 'marker' or 'ps' in renderers or 'php' in renderers %}
+    "regexp"
+{% endif %}
+{% if 'json' in renderers %}
+    "strconv"
+{% endif %}
+{% if strategy.storage == 'packed' %}
+    "strings"
+{% endif %}
+)
+{% include "data/" ~ strategy.storage ~ "/go.j2" %}
+var renderers = map[string]func(string) string{}
+{{ renderers | file_import }}
+{% include "emit/" ~ strategy.storage ~ "/go.j2" %}

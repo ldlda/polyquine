@@ -1,0 +1,7 @@
+{% if 'json' in renderers %}
+require "json"
+{% endif %}
+{% include "data/" ~ strategy.storage ~ "/rb.j2" %}
+RENDERERS = {}
+{{ renderers | file_import }}
+{% include "emit/" ~ strategy.storage ~ "/rb.j2" %}

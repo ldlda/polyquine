@@ -1,0 +1,22 @@
+    parts := strings.Split(data, "\n@@LDA_STAGE@@\n")
+{% if strategy.renderer_binding == "callable" %}
+    entries := []struct { id, content string; renderer func(string) string }{
+{% else %}
+    entries := []struct { id, content string; renderer string }{
+{% endif %}
+{% for t in languages %}
+{% if strategy.renderer_binding == "callable" %}
+        {"{{ t.id }}", parts[{{ positions[t.id] }}], renderers["{{ t.renderer }}"]},
+{% else %}
+        {"{{ t.id }}", parts[{{ positions[t.id] }}], "{{ t.renderer }}"},
+{% endif %}
+{% endfor %}
+    }
+    entry := entries[index]
+    source := entry.content
+    _ = how
+{% if strategy.renderer_binding == "callable" %}
+    encoded := entry.renderer(data)
+{% else %}
+    encoded := renderers[entry.renderer](data)
+{% endif %}

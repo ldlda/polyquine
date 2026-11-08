@@ -1,0 +1,14 @@
+{% if targets|length == 1 %}
+[$index, $how] = [{{ positions[targets[0].id] }}, "{{ targets[0].renderer }}"];
+{% else %}
+$targets = [
+{% for t in targets %}
+    "{{ t.id }}" => [{{ positions[t.id] }}, "{{ t.renderer }}"],
+{% endfor %}
+];
+$target = $argv[1] ?? "{{ default.id }}";
+if (!array_key_exists($target, $targets)) throw new Exception("Unknown target");
+[$index, $how] = $targets[$target];
+{% endif %}
+{% include "access/" ~ strategy.access ~ "/php.j2" %}
+fwrite(STDOUT, str_replace("@@LDA_" . "DATA@@", $encoded, $source));

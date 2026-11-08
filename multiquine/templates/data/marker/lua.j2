@@ -1,0 +1,5 @@
+local W = {
+{% for t in languages %}
+    ["{{ t.id }}"] = {{ t | content }},
+{% endfor %}
+}

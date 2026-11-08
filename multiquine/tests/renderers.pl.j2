@@ -1,0 +1,10 @@
+use strict;
+use warnings;
+use JSON::PP ();
+my $RENDERERS = {};
+{{ snippets }}
+binmode STDIN, ':raw';
+binmode STDOUT, ':raw';
+local $/;
+my $value = <STDIN> // '';
+print $RENDERERS->{'{{ how }}'}->($value);

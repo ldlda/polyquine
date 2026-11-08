@@ -1,0 +1,25 @@
+# Generated sources and binaries (paths relative to this project folder).
+/out/
+/out-ring/
+/generated/
+/benchmark/outputs/
+/benchmark/results_*.json
+/*.zip
+
+# Python environments and caches.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Optional syscall traces.
+/execve.log
+
+# Java and Haskell compiler artifacts.
+*.class
+*.hi
+*.o
+
+# Kotlin JVM build artifacts.
+*.jar

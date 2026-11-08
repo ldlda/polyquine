@@ -1,0 +1,11 @@
+{% if 'json' in renderers %}
+import json
+{% endif %}
+{% if strategy.storage == 'marker' %}
+import re
+{% endif %}
+import sys
+{% include "data/" ~ strategy.storage ~ "/py.j2" %}
+RENDERERS = {}
+{{ renderers | file_import }}
+{% include "emit/" ~ strategy.storage ~ "/py.j2" %}

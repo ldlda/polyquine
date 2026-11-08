@@ -1,0 +1,7 @@
+seed :: String
+seed = {{ data }}
+
+splitOn :: String -> String -> [String]
+splitOn separator input = case findIndex (isPrefixOf separator) (tails input) of
+    Nothing -> [input]
+    Just index -> take index input : splitOn separator (drop (index + length separator) input)

@@ -1,0 +1,13 @@
+module Main where
+import Data.Char (isAsciiLower, isDigit, ord, chr)
+import Data.List (isPrefixOf, tails, findIndex, intercalate)
+import Numeric (showHex)
+import System.Environment (getArgs)
+import System.IO (stdout, hSetBinaryMode, hPutStr)
+
+render :: String -> String -> String
+{{ renderers | file_import }}
+render name _ = error ("Unknown renderer: " ++ name)
+
+{% include "data/" ~ strategy.storage ~ "/hs.j2" %}
+{% include "emit/" ~ strategy.storage ~ "/hs.j2" %}

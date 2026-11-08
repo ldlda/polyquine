@@ -1,0 +1,4 @@
+$RENDERERS['ps'] = {
+    param([string]$s)
+    "'" + $s.Replace("'", "''") + "'"
+}

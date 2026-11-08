@@ -1,0 +1,7 @@
+sources :: [(String, String)]
+sources = [
+{% for t in languages %}
+    ("{{ t.id }}", {{ t | content }}){% if not loop.last %},{% endif %}
+
+{% endfor %}
+    ]

@@ -1,0 +1,16 @@
+{% if targets|length == 1 %}
+$index, $how = {{ positions[targets[0].id] }}, '{{ targets[0].renderer }}'
+{% else %}
+$targets = @{
+{% for t in targets %}
+    '{{ t.id }}' = @({{ positions[t.id] }}, '{{ t.renderer }}')
+{% endfor %}
+}
+$target = if ($args.Count) { $args[0] } else { '{{ default.id }}' }
+if (-not $targets.ContainsKey($target)) { throw "Unknown target: $target" }
+$index, $how = $targets[$target]
+{% endif %}
+{% include "access/" ~ strategy.access ~ "/ps.j2" %}
+$code = $source.Replace(('@@LDA_' + 'DATA@@'), $encoded)
+$bytes = [System.Text.Encoding]::UTF8.GetBytes($code)
+[Console]::OpenStandardOutput().Write($bytes, 0, $bytes.Length)

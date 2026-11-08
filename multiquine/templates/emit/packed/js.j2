@@ -1,0 +1,12 @@
+{% if targets|length == 1 %}
+const [index, how] = [{{ positions[targets[0].id] }}, "{{ targets[0].renderer }}"];
+{% else %}
+const targets = {
+{% for t in targets %}
+    {{ t.id }}: [{{ positions[t.id] }}, "{{ t.renderer }}"],
+{% endfor %}
+};
+const [index, how] = targets[process.argv[2] || "{{ default.id }}"];
+{% endif %}
+{% include "access/" ~ strategy.access ~ "/js.j2" %}
+process.stdout.write(source.replaceAll("@@LDA_" + "DATA@@", () => encoded));

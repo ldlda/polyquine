@@ -1,0 +1,42 @@
+{
+  "py": {
+    "renderer": "json"
+  },
+  "js": {
+    "renderer": "json"
+  },
+  "go": {
+    "renderer": "json"
+  },
+  "rb": {
+    "renderer": "json"
+  },
+  "ps": {
+    "renderer": "ps",
+    "extension": "ps1"
+  },
+  "rs": {
+    "renderer": "json"
+  },
+  "php": {
+    "renderer": "php"
+  },
+  "lua": {
+    "renderer": "json"
+  },
+  "pl": {
+    "renderer": "php"
+  },
+  "java": {
+    "renderer": "json"
+  },
+  "hs": {
+    "renderer": "json"
+  },
+  "c": {
+    "renderer": "json"
+  },
+  "kt": {
+    "renderer": "kotlin"
+  }
+}

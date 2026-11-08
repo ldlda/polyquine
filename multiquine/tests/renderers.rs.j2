@@ -1,0 +1,13 @@
+use std::collections::HashMap;
+use std::io::{self, Read, Write};
+type Renderer = fn(&str) -> String;
+fn renderers() -> HashMap<&'static str, Renderer> {
+    let mut renderers: HashMap<&str, Renderer> = HashMap::new();
+{{ snippets }}
+    renderers
+}
+fn main() {
+    let mut value = String::new();
+    io::stdin().read_to_string(&mut value).unwrap();
+    io::stdout().write_all(renderers()["{{ how }}"](&value).as_bytes()).unwrap();
+}

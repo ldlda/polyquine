@@ -1,0 +1,5 @@
+<?php
+{% include "data/" ~ strategy.storage ~ "/php.j2" %}
+$RENDERERS = [];
+{{ renderers | file_import }}
+{% include "emit/" ~ strategy.storage ~ "/php.j2" %}

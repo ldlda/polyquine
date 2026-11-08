@@ -1,0 +1,8 @@
+    val sources = mapOf(
+{% for t in languages %}
+        "{{ t.id }}" to parts[{{ positions[t.id] }}],
+{% endfor %}
+    )
+    val names = listOf({% for t in languages %}"{{ t.id }}", {% endfor %})
+    val source = sources.getValue(names[index])
+    val encoded = RENDERERS.getValue(how)(DATA)

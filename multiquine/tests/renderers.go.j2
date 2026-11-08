@@ -1,0 +1,11 @@
+package main
+import ("fmt"; "io"; "os"; "regexp"; "strconv")
+var _ = regexp.MustCompile
+var _ = strconv.Quote
+var renderers = map[string]func(string) string{}
+{{ snippets }}
+func main() {
+    input, err := io.ReadAll(os.Stdin)
+    if err != nil { panic(err) }
+    fmt.Print(renderers["{{ how }}"](string(input)))
+}

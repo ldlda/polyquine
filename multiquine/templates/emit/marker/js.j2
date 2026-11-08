@@ -1,0 +1,14 @@
+const TOKEN = /LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)/g;
+
+
+
+function oro(target = "js") {
+    if (![{% for t in targets %}"{{ t.id }}",{% endfor %}].includes(target)) throw Error(`Unknown language: ${target}`);
+    return W[target].replace(TOKEN, (_whole, language, how) => {
+        if (!Object.hasOwn(W, language)) throw Error(`Unknown template: ${language}`);
+        if (!Object.hasOwn(RENDERERS, how)) throw Error(`Unknown renderer: ${how}`);
+        return RENDERERS[how](W[language]);
+    });
+}
+
+process.stdout.write({% if targets|length == 1 %}oro("{{ targets[0].id }}"){% else %}oro(process.argv[2] || "{{ default.id }}"){% endif %});

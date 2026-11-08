@@ -1,0 +1,7 @@
+local sources, names = {}, {}
+{% for t in languages %}
+sources["{{ t.id }}"] = parts[{{ positions[t.id] + 1 }}]
+names[{{ positions[t.id] + 1 }}] = "{{ t.id }}"
+{% endfor %}
+local source = sources[names[index]]
+local encoded = RENDERERS[how](DATA)

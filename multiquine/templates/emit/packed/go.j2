@@ -1,0 +1,19 @@
+func main() {
+{% if targets|length == 1 %}
+    index, how := {{ positions[targets[0].id] }}, "{{ targets[0].renderer }}"
+{% else %}
+    type destination struct { index int; how string }
+    targets := map[string]destination{
+{% for t in targets %}
+        "{{ t.id }}": { {{ positions[t.id] }}, "{{ t.renderer }}" },
+{% endfor %}
+    }
+    target := "{{ default.id }}"
+    if len(os.Args) > 1 { target = os.Args[1] }
+    dest, ok := targets[target]
+    if !ok { panic("Unknown target") }
+    index, how := dest.index, dest.how
+{% endif %}
+{% include "access/" ~ strategy.access ~ "/go.j2" %}
+    fmt.Print(strings.ReplaceAll(source, "@@LDA_" + "DATA@@", encoded))
+}

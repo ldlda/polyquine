@@ -1,0 +1,12 @@
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.function.Function;
+{% if strategy.storage == 'marker' %}
+import java.util.regex.*;
+{% endif %}
+class Main {
+    static final Map<String, Function<String, String>> RENDERERS = new HashMap<>();
+{{ renderers | file_import }}
+{% include "data/" ~ strategy.storage ~ "/java.j2" %}
+{% include "emit/" ~ strategy.storage ~ "/java.j2" %}
+}

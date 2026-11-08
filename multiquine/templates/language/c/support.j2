@@ -1,0 +1,78 @@
+typedef struct { char *data; size_t len; } Text;
+typedef Text (*Renderer)(Text);
+typedef struct { const char *name; Renderer function; } RendererEntry;
+typedef struct { char *data; size_t len, capacity; } Buffer;
+
+static void fail(const char *message) { fprintf(stderr, "%s\n", message); exit(1); }
+static void *allocate(size_t size) {
+    void *p = malloc(size ? size : 1);
+    if (!p) fail("Allocation failed");
+    return p;
+}
+static Text text(const char *s) { return (Text){(char *)s, strlen(s)}; }
+static void append(Buffer *b, const char *s, size_t n) {
+    if (n > SIZE_MAX - b->len - 1) fail("Source too large");
+    size_t needed = b->len + n + 1;
+    if (needed > b->capacity) {
+        size_t capacity = b->capacity ? b->capacity : 64;
+        while (capacity < needed) {
+            if (capacity > SIZE_MAX / 2) { capacity = needed; break; }
+            capacity *= 2;
+        }
+        void *p = realloc(b->data, capacity);
+        if (!p) fail("Allocation failed");
+        b->data = p; b->capacity = capacity;
+    }
+    memcpy(b->data + b->len, s, n);
+    b->len += n;
+    b->data[b->len] = '\0';
+}
+static Text finish(Buffer *b) {
+    if (!b->data) append(b, "", 0);
+    return (Text){b->data, b->len};
+}
+static Text replace_text(Text source, const char *needle, Text replacement) {
+    Buffer result = {0};
+    size_t width = strlen(needle), copied = 0, i = 0;
+    if (!width) fail("Empty replacement pattern");
+    while (i + width <= source.len) {
+        if (memcmp(source.data + i, needle, width) == 0) {
+            append(&result, source.data + copied, i - copied);
+            append(&result, replacement.data, replacement.len);
+            i += width; copied = i;
+        } else ++i;
+    }
+    append(&result, source.data + copied, source.len - copied);
+    return finish(&result);
+}
+static char *name_copy(const char *source, size_t length) {
+    char *name = allocate(length + 1);
+    memcpy(name, source, length); name[length] = '\0';
+    return name;
+}
+static int identifier_start(char c) { return c >= 'a' && c <= 'z'; }
+static int identifier_char(char c) {
+    return identifier_start(c) || (c >= '0' && c <= '9') || c == '_';
+}
+static Text *split_seed(Text seed, size_t count) {
+    const char *separator = "\n@@LDA_STAGE@@\n";
+    size_t width = strlen(separator), start = 0, found = 0;
+    Text *parts = allocate(count * sizeof(*parts));
+    for (size_t i = 0; i + width <= seed.len;) {
+        if (memcmp(seed.data + i, separator, width) == 0) {
+            if (found + 1 >= count) fail("Invalid seed");
+            parts[found++] = (Text){seed.data + start, i - start};
+            i += width; start = i;
+        } else ++i;
+    }
+    if (found + 1 != count) fail("Invalid seed");
+    parts[found] = (Text){seed.data + start, seed.len - start};
+    return parts;
+}
+static void write_code(Text code) {
+#ifdef _WIN32
+    if (_setmode(_fileno(stdout), _O_BINARY) == -1) fail("Cannot set binary output");
+#endif
+    if (fwrite(code.data, 1, code.len, stdout) != code.len) fail("Write failed");
+}
+static Renderer get_renderer(const char *name);

@@ -1,0 +1,6 @@
+require "json"
+RENDERERS = {}
+{{ snippets }}
+STDIN.binmode
+STDOUT.binmode
+STDOUT.write(RENDERERS["{{ how }}"].call(STDIN.read))

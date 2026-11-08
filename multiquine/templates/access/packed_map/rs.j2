@@ -1,0 +1,9 @@
+    let parts: Vec<&str> = DATA.split("\n@@LDA_STAGE@@\n").collect();
+    let r = renderers();
+    let sources = HashMap::from([
+{% for t in languages %}
+        ("{{ t.id }}", parts[{{ positions[t.id] }}]),
+{% endfor %}
+    ]);
+    let source = sources[[{% for t in languages %}"{{ t.id }}",{% endfor %}][index]];
+    let encoded = r[how](DATA);

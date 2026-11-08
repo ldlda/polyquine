@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#ifdef _WIN32
+#include <io.h>
+#include <fcntl.h>
+#endif
+{% include "templates/language/c/support.j2" %}
+{{ snippets }}
+static const RendererEntry RENDERERS[] = {
+{% for how in renderers %}
+    LDA_ENTRY_{{ how }},
+{% endfor %}
+};
+static Renderer get_renderer(const char *name) {
+    for (size_t i = 0; i < sizeof(RENDERERS) / sizeof(*RENDERERS); ++i)
+        if (strcmp(name, RENDERERS[i].name) == 0) return RENDERERS[i].function;
+    fail("Unknown renderer"); return NULL;
+}
+int main(void) {
+    Buffer input = {0};
+    int c;
+    while ((c = getchar()) != EOF) { char byte = (char)c; append(&input, &byte, 1); }
+    Text value = finish(&input);
+    Text encoded = get_renderer("{{ how }}")(value);
+    write_code(encoded);
+    free(value.data); free(encoded.data);
+    return 0;
+}

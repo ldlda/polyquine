@@ -1,0 +1,18 @@
+fun main(args: Array<String>) {
+{% if targets|length == 1 %}
+    val index = {{ positions[targets[0].id] }}
+    val how = "{{ targets[0].renderer }}"
+{% else %}
+    val targets = mapOf(
+{% for t in targets %}
+        "{{ t.id }}" to ({{ positions[t.id] }} to "{{ t.renderer }}"),
+{% endfor %}
+    )
+    val (index, how) = targets[args.firstOrNull() ?: "{{ default.id }}"]
+        ?: error("Unknown target")
+{% endif %}
+    val parts = DATA.split("\n@@LDA_STAGE@@\n")
+{% include "access/" ~ strategy.access ~ "/kt.j2" %}
+    val code = source.replace("@@LDA_" + "DATA@@", encoded)
+    System.out.write(code.toByteArray(Charsets.UTF_8))
+}

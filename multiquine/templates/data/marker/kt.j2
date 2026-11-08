@@ -1,0 +1,5 @@
+private val W = mapOf(
+{% for t in languages %}
+    "{{ t.id }}" to {{ t | content }},
+{% endfor %}
+)

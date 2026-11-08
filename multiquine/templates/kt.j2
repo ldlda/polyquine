@@ -1,0 +1,4 @@
+private val RENDERERS = mutableMapOf<String, (String) -> String>()
+{{ renderers | file_import }}
+{% include "data/" ~ strategy.storage ~ "/kt.j2" %}
+{% include "emit/" ~ strategy.storage ~ "/kt.j2" %}

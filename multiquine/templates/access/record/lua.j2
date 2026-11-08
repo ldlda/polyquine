@@ -1,0 +1,15 @@
+local entries = {
+{% for t in languages %}
+{% if strategy.renderer_binding == 'callable' %}
+    { "{{ t.id }}", parts[{{ positions[t.id] + 1 }}], RENDERERS["{{ t.renderer }}"] },
+{% else %}
+    { "{{ t.id }}", parts[{{ positions[t.id] + 1 }}], "{{ t.renderer }}" },
+{% endif %}
+{% endfor %}
+}
+local source, renderer = entries[index][2], entries[index][3]
+{% if strategy.renderer_binding == 'callable' %}
+local encoded = renderer(DATA)
+{% else %}
+local encoded = RENDERERS[renderer](DATA)
+{% endif %}

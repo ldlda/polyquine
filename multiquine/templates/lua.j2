@@ -1,0 +1,4 @@
+local RENDERERS = {}
+{{ renderers | file_import }}
+{% include "data/" ~ strategy.storage ~ "/lua.j2" %}
+{% include "emit/" ~ strategy.storage ~ "/lua.j2" %}

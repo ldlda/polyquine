@@ -1,0 +1,17 @@
+fn main() {
+{% if targets|length == 1 %}
+    let (index, how) = ({{ positions[targets[0].id] }}, "{{ targets[0].renderer }}");
+{% else %}
+    let targets = HashMap::from([
+{% for t in targets %}
+        ("{{ t.id }}", ({{ positions[t.id] }}, "{{ t.renderer }}")),
+{% endfor %}
+    ]);
+    let target = std::env::args().nth(1).unwrap_or_else(|| "{{ default.id }}".into());
+    let &(index, how) = targets.get(target.as_str()).expect("Unknown target");
+{% endif %}
+{% include "access/" ~ strategy.access ~ "/rs.j2" %}
+    let marker = ["@@LDA_", "DATA@@"].concat();
+    let code = source.replace(&marker, &encoded);
+    io::stdout().write_all(code.as_bytes()).unwrap();
+}

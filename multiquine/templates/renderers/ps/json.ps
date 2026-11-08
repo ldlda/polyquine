@@ -1,0 +1,22 @@
+function Convert-LdaJson([string]$s) {
+    $result = [System.Text.StringBuilder]::new()
+    [void]$result.Append('"')
+    foreach ($char in $s.ToCharArray()) {
+        $code = [int]$char
+        if ($code -eq 34) { $piece = '\"' }
+        elseif ($code -eq 92) { $piece = '\\' }
+        elseif ($code -eq 8) { $piece = '\b' }
+        elseif ($code -eq 9) { $piece = '\t' }
+        elseif ($code -eq 10) { $piece = '\n' }
+        elseif ($code -eq 12) { $piece = '\f' }
+        elseif ($code -eq 13) { $piece = '\r' }
+        elseif ($code -lt 32 -or $code -gt 126) {
+            $piece = '\u' + $code.ToString('x4')
+        }
+        else { $piece = [string]$char }
+        [void]$result.Append($piece)
+    }
+    [void]$result.Append('"')
+    return $result.ToString()
+}
+$RENDERERS['json'] = ${function:Convert-LdaJson}

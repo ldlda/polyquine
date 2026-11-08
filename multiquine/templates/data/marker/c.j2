@@ -1,0 +1,11 @@
+static const struct { const char *name, *content; } W[] = {
+{% for t in languages %}
+    {"{{ t.id }}", {{ t | content }}},
+{% endfor %}
+};
+static Text find_source(const char *name) {
+    for (size_t i = 0; i < sizeof(W) / sizeof(*W); ++i)
+        if (strcmp(name, W[i].name) == 0) return text(W[i].content);
+    fail("Unknown source");
+    return text("");
+}

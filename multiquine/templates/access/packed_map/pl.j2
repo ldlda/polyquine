@@ -1,0 +1,8 @@
+my $sources = {
+{% for t in languages %}
+    "{{ t.id }}" => $parts[{{ positions[t.id] }}],
+{% endfor %}
+};
+my @names = ({% for t in languages %}"{{ t.id }}",{% endfor %});
+my $source = $sources->{$names[$index]};
+my $encoded = $RENDERERS->{$how}->($DATA);

@@ -1,0 +1,26 @@
+int main(int argc, char **argv) {
+{% if targets|length == 1 %}
+    size_t index = {{ positions[targets[0].id] }};
+    const char *how = "{{ targets[0].renderer }}";
+{% else %}
+    const struct { const char *name; size_t index; const char *how; } targets[] = {
+{% for t in targets %}
+        {"{{ t.id }}", {{ positions[t.id] }}, "{{ t.renderer }}"},
+{% endfor %}
+    };
+    const char *target = argc > 1 ? argv[1] : "{{ default.id }}";
+    size_t selected;
+    for (selected = 0; selected < sizeof(targets) / sizeof(*targets); ++selected)
+        if (strcmp(target, targets[selected].name) == 0) break;
+    if (selected == sizeof(targets) / sizeof(*targets)) fail("Unknown target");
+    size_t index = targets[selected].index;
+    const char *how = targets[selected].how;
+{% endif %}
+    Text seed = text(DATA);
+    Text *parts = split_seed(seed, {{ languages|length }});
+{% include "access/" ~ strategy.access ~ "/c.j2" %}
+    Text code = replace_text(source, "@@LDA_" "DATA@@", encoded);
+    write_code(code);
+    free(code.data); free(encoded.data); free(parts);
+    return 0;
+}

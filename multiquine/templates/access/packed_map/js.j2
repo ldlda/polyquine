@@ -1,0 +1,4 @@
+const parts = DATA.split("\n@@LDA_STAGE@@\n");
+const sources = Object.fromEntries({{ languages | map(attribute="id") | list | tojson }}.map((id, i) => [id, parts[i]]));
+const source = sources[{{ languages | map(attribute="id") | list | tojson }}[index]];
+const encoded = RENDERERS[how](DATA);

@@ -1,0 +1,16 @@
+const parts = DATA.split("\n@@LDA_STAGE@@\n");
+const entries = [
+{% for t in languages %}
+{% if strategy.renderer_binding == "callable" %}
+    ["{{ t.id }}", parts[{{ positions[t.id] }}], RENDERERS["{{ t.renderer }}"]],
+{% else %}
+    ["{{ t.id }}", parts[{{ positions[t.id] }}], "{{ t.renderer }}"],
+{% endif %}
+{% endfor %}
+];
+const [, source, renderer] = entries[index];
+{% if strategy.renderer_binding == "callable" %}
+const encoded = renderer(DATA);
+{% else %}
+const encoded = RENDERERS[renderer](DATA);
+{% endif %}

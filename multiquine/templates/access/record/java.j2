@@ -1,0 +1,21 @@
+{% if strategy.renderer_binding == 'callable' %}
+        record Entry(String id, String content, Function<String, String> renderer) {}
+{% else %}
+        record Entry(String id, String content, String renderer) {}
+{% endif %}
+        Entry[] entries = {
+{% for t in languages %}
+{% if strategy.renderer_binding == 'callable' %}
+            new Entry("{{ t.id }}", parts[{{ positions[t.id] }}], RENDERERS.get("{{ t.renderer }}")),
+{% else %}
+            new Entry("{{ t.id }}", parts[{{ positions[t.id] }}], "{{ t.renderer }}"),
+{% endif %}
+{% endfor %}
+        };
+        Entry entry = entries[index];
+        String source = entry.content();
+{% if strategy.renderer_binding == 'callable' %}
+        String encoded = entry.renderer().apply(DATA);
+{% else %}
+        String encoded = RENDERERS.get(entry.renderer()).apply(DATA);
+{% endif %}

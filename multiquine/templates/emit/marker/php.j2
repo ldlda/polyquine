@@ -1,0 +1,10 @@
+function oro($target = 'php') {
+    global $W, $RENDERERS;
+    if (!in_array($target, [{% for t in targets %}"{{ t.id }}",{% endfor %}], true)) throw new Exception("Unknown language: $target");
+    return preg_replace_callback('/LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)/', function($m) use ($W, $RENDERERS) {
+        if (!array_key_exists($m[1], $W)) throw new Exception("Unknown template: " . $m[1]);
+        if (!array_key_exists($m[2], $RENDERERS)) throw new Exception("Unknown renderer: " . $m[2]);
+        return $RENDERERS[$m[2]]($W[$m[1]]);
+    }, $W[$target]);
+}
+fwrite(STDOUT, {% if targets|length == 1 %}oro('{{ targets[0].id }}'){% else %}oro($argv[1] ?? '{{ default.id }}'){% endif %});

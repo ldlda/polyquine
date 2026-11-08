@@ -1,0 +1,39 @@
+static Text expand(Text source) {
+    Buffer result = {0};
+    size_t copied = 0, i = 0;
+    while (i + 4 <= source.len) {
+        if (memcmp(source.data + i, "LDA:", 4) != 0) { ++i; continue; }
+        size_t language = i + 4, colon = language;
+        while (colon < source.len && identifier_char(source.data[colon])) ++colon;
+        if (colon == language || !identifier_start(source.data[language]) ||
+            colon >= source.len || source.data[colon] != ':') { ++i; continue; }
+        size_t how = colon + 1, end = how;
+        while (end < source.len && identifier_char(source.data[end])) ++end;
+        if (end == how || !identifier_start(source.data[how])) { ++i; continue; }
+        char *name = name_copy(source.data + language, colon - language);
+        char *format = name_copy(source.data + how, end - how);
+        Text rendered = get_renderer(format)(find_source(name));
+        append(&result, source.data + copied, i - copied);
+        append(&result, rendered.data, rendered.len);
+        free(name); free(format); free(rendered.data);
+        i = end; copied = end;
+    }
+    append(&result, source.data + copied, source.len - copied);
+    return finish(&result);
+}
+int main(int argc, char **argv) {
+    const char *allowed[] = { {% for t in targets %}"{{ t.id }}", {% endfor %} };
+{% if targets|length == 1 %}
+    const char *target = "{{ targets[0].id }}";
+{% else %}
+    const char *target = argc > 1 ? argv[1] : "{{ default.id }}";
+{% endif %}
+    size_t selected;
+    for (selected = 0; selected < sizeof(allowed) / sizeof(*allowed); ++selected)
+        if (strcmp(target, allowed[selected]) == 0) break;
+    if (selected == sizeof(allowed) / sizeof(*allowed)) fail("Unknown target");
+    Text code = expand(find_source(target));
+    write_code(code);
+    free(code.data);
+    return 0;
+}

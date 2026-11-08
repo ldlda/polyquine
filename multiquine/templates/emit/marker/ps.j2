@@ -1,0 +1,23 @@
+function Invoke-Oro([string]$target) {
+    if ($target -cnotin @({% for t in targets %}"{{ t.id }}"{% if not loop.last %}, {% endif %}{% endfor %})) { throw "Unknown language: $target" }
+    $template = $W[$target]
+    $pattern = 'LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)'
+    return [regex]::Replace($template, $pattern, [System.Text.RegularExpressions.MatchEvaluator] {
+        param($match)
+        $language = $match.Groups[1].Value
+        $how = $match.Groups[2].Value
+        if (-not $W.ContainsKey($language)) { throw "Unknown template: $language" }
+        if (-not $RENDERERS.ContainsKey($how)) { throw "Unknown renderer: $how" }
+        return [string](& $RENDERERS[$how] $W[$language])
+    })
+}
+
+{% if targets|length == 1 %}
+$target = '{{ targets[0].id }}'
+{% else %}
+$target = if ($args.Count) { $args[0] } else { '{{ default.id }}' }
+{% endif %}
+$code = Invoke-Oro $target
+$bytes = [System.Text.Encoding]::UTF8.GetBytes($code)
+$stdout = [Console]::OpenStandardOutput()
+$stdout.Write($bytes, 0, $bytes.Length)

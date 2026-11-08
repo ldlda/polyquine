@@ -1,0 +1,17 @@
+{% if strategy.renderer_binding == 'callable' %}
+    const struct { const char *name; Text content; Renderer renderer; } entries[] = {
+{% for t in languages %}
+        {"{{ t.id }}", parts[{{ positions[t.id] }}], get_renderer("{{ t.renderer }}")},
+{% endfor %}
+    };
+    Text source = entries[index].content;
+    Text encoded = entries[index].renderer(seed);
+{% else %}
+    const struct { const char *name; Text content; const char *renderer; } entries[] = {
+{% for t in languages %}
+        {"{{ t.id }}", parts[{{ positions[t.id] }}], "{{ t.renderer }}"},
+{% endfor %}
+    };
+    Text source = entries[index].content;
+    Text encoded = get_renderer(entries[index].renderer)(seed);
+{% endif %}

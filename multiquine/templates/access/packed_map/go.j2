@@ -1,0 +1,8 @@
+    parts := strings.Split(data, "\n@@LDA_STAGE@@\n")
+    sources := map[string]string{
+{% for t in languages %}
+        "{{ t.id }}": parts[{{ positions[t.id] }}],
+{% endfor %}
+    }
+    source := sources[[]string{{ "{" }}{% for t in languages %}"{{ t.id }}",{% endfor %}{{ "}" }}[index]]
+    encoded := renderers[how](data)

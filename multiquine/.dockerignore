@@ -1,0 +1,15 @@
+.git
+__pycache__
+*.py[cod]
+.venv
+out
+out-ring
+*.zip
+*.log
+test_results.txt
+benchmark/outputs
+benchmark/results_*.json
+*.jar
+*.class
+*.o
+*.hi

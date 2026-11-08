@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#ifdef _WIN32
+#include <io.h>
+#include <fcntl.h>
+#endif
+{% include "language/c/support.j2" %}
+{{ renderers | file_import }}
+static const RendererEntry RENDERERS[] = {
+{% for how in renderers %}
+    LDA_ENTRY_{{ how }},
+{% endfor %}
+};
+static Renderer get_renderer(const char *name) {
+    for (size_t i = 0; i < sizeof(RENDERERS) / sizeof(*RENDERERS); ++i)
+        if (strcmp(name, RENDERERS[i].name) == 0) return RENDERERS[i].function;
+    fail("Unknown renderer");
+    return NULL;
+}
+{% include "data/" ~ strategy.storage ~ "/c.j2" %}
+{% include "emit/" ~ strategy.storage ~ "/c.j2" %}

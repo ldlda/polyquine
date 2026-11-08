@@ -1,0 +1,9 @@
+        Map<String, String> sources = Map.ofEntries(
+{% for t in languages %}
+            Map.entry("{{ t.id }}", parts[{{ positions[t.id] }}]){% if not loop.last %},{% endif %}
+
+{% endfor %}
+        );
+        String[] names = { {% for t in languages %}"{{ t.id }}", {% endfor %} };
+        String source = sources.get(names[index]);
+        String encoded = RENDERERS.get(how).apply(DATA);

@@ -1,0 +1,7 @@
+fn templates() -> HashMap<&'static str, &'static str> {
+    HashMap::from([
+{% for language in languages %}
+        ("{{ language.id }}", {{ language | content }}),
+{% endfor %}
+    ])
+}

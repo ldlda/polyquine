@@ -1,0 +1,17 @@
+    public static void main(String[] args) throws Exception {
+        Set<String> allowed = Set.of({% for t in targets %}"{{ t.id }}"{% if not loop.last %}, {% endif %}{% endfor %});
+{% if targets|length == 1 %}
+        String target = "{{ targets[0].id }}";
+{% else %}
+        String target = args.length == 0 ? "{{ default.id }}" : args[0];
+{% endif %}
+        if (!allowed.contains(target)) throw new IllegalArgumentException("Unknown target");
+        Pattern token = Pattern.compile("LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)");
+        String code = token.matcher(W.get(target)).replaceAll(match -> {
+            String source = W.get(match.group(1));
+            Function<String, String> renderer = RENDERERS.get(match.group(2));
+            if (source == null || renderer == null) throw new IllegalArgumentException("Invalid reference");
+            return Matcher.quoteReplacement(renderer.apply(source));
+        });
+        System.out.write(code.getBytes(StandardCharsets.UTF_8));
+    }

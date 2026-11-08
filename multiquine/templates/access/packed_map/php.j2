@@ -1,0 +1,4 @@
+$parts = explode("\n@@LDA_STAGE@@\n", $DATA);
+$sources = array_combine({{ languages | map(attribute="id") | list | tojson }}, $parts);
+$source = $sources[{{ languages | map(attribute="id") | list | tojson }}[$index]];
+$encoded = $RENDERERS[$how]($DATA);

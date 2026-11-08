@@ -1,0 +1,6 @@
+private val RENDERERS = mutableMapOf<String, (String) -> String>()
+{{ snippets }}
+fun main() {
+    val value = System.`in`.readBytes().toString(Charsets.UTF_8)
+    System.out.write(RENDERERS.getValue("{{ how }}")(value).toByteArray(Charsets.UTF_8))
+}

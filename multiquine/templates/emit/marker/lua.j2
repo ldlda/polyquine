@@ -1,0 +1,16 @@
+local allowed = {
+{% for t in targets %}
+    ["{{ t.id }}"] = true,
+{% endfor %}
+}
+{% if targets|length == 1 %}
+local target = "{{ targets[0].id }}"
+{% else %}
+local target = arg[1] or "{{ default.id }}"
+{% endif %}
+if not allowed[target] then error("Unknown target") end
+local code = W[target]:gsub("LDA:([a-z][a-z0-9_]*):([a-z][a-z0-9_]*)", function(language, how)
+    if not W[language] or not RENDERERS[how] then error("Invalid reference") end
+    return RENDERERS[how](W[language])
+end)
+io.write(code)

@@ -1,0 +1,17 @@
+        entries = [
+{% for t in languages %}
+{% if strategy.renderer_binding == 'callable' %}
+            ("{{ t.id }}", parts !! {{ positions[t.id] }}, render "{{ t.renderer }}"){% if not loop.last %},{% endif %}
+
+{% else %}
+            ("{{ t.id }}", parts !! {{ positions[t.id] }}, "{{ t.renderer }}"){% if not loop.last %},{% endif %}
+
+{% endif %}
+{% endfor %}
+            ]
+        (_, source, renderer) = entries !! index
+{% if strategy.renderer_binding == 'callable' %}
+        encoded = renderer seed
+{% else %}
+        encoded = render renderer seed
+{% endif %}

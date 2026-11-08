@@ -1,0 +1,11 @@
+import java.util.*;
+import java.util.function.Function;
+import java.nio.charset.StandardCharsets;
+class Main {
+    static final Map<String, Function<String, String>> RENDERERS = new HashMap<>();
+{{ snippets }}
+    public static void main(String[] args) throws Exception {
+        String value = new String(System.in.readAllBytes(), StandardCharsets.UTF_8);
+        System.out.write(RENDERERS.get("{{ how }}").apply(value).getBytes(StandardCharsets.UTF_8));
+    }
+}

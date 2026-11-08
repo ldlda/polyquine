@@ -1,0 +1,151 @@
+V0.14: C AND KOTLIN SLICE
+
+Core build files unchanged: build.py, lda.py, strategies.py, cycles.py.
+
+ENCODER PROBES
+ALL QUOTING PASS: 325 actual native executions across all emitters
+
+ALL STRATEGIES
+ALL QUOTING PASS: 325 actual native executions across all emitters
+STRATEGY packed_index
+PASS network: py,js,go,rb,ps,rs,php,lua,pl,java,hs,c,kt (182 executions)
+PASS ring: py -> js -> go -> rb -> ps -> rs -> php -> lua -> pl -> java -> hs -> c -> kt (1 laps)
+PASS ring: c -> go -> hs -> java -> js -> kt -> lua -> php -> pl -> ps -> py -> rb -> rs (1 laps)
+PASS ring: kt -> c -> hs -> java -> pl -> lua -> php -> rs -> ps -> rb -> go -> js -> py (1 laps)
+PASS ring: py (2 laps)
+PASS ring: js (2 laps)
+PASS ring: go (2 laps)
+PASS ring: rb (2 laps)
+PASS ring: ps (2 laps)
+PASS ring: rs (2 laps)
+PASS ring: php (2 laps)
+PASS ring: lua (2 laps)
+PASS ring: pl (2 laps)
+PASS ring: java (2 laps)
+PASS ring: hs (2 laps)
+PASS ring: c (2 laps)
+PASS ring: kt (2 laps)
+PASS mixed graph: 4 executed edges and rejection of unconfigured destination
+STRATEGY packed_map
+PASS network: py,js,go,rb,ps,rs,php,lua,pl,java,hs,c,kt (182 executions)
+PASS ring: py -> js -> go -> rb -> ps -> rs -> php -> lua -> pl -> java -> hs -> c -> kt (1 laps)
+PASS ring: c -> go -> hs -> java -> js -> kt -> lua -> php -> pl -> ps -> py -> rb -> rs (1 laps)
+PASS ring: kt -> c -> hs -> java -> pl -> lua -> php -> rs -> ps -> rb -> go -> js -> py (1 laps)
+PASS ring: py (2 laps)
+PASS ring: js (2 laps)
+PASS ring: go (2 laps)
+PASS ring: rb (2 laps)
+PASS ring: ps (2 laps)
+PASS ring: rs (2 laps)
+PASS ring: php (2 laps)
+PASS ring: lua (2 laps)
+PASS ring: pl (2 laps)
+PASS ring: java (2 laps)
+PASS ring: hs (2 laps)
+PASS ring: c (2 laps)
+PASS ring: kt (2 laps)
+PASS mixed graph: 4 executed edges and rejection of unconfigured destination
+STRATEGY record_key
+PASS network: py,js,go,rb,ps,rs,php,lua,pl,java,hs,c,kt (182 executions)
+PASS ring: py -> js -> go -> rb -> ps -> rs -> php -> lua -> pl -> java -> hs -> c -> kt (1 laps)
+PASS ring: c -> go -> hs -> java -> js -> kt -> lua -> php -> pl -> ps -> py -> rb -> rs (1 laps)
+PASS ring: kt -> c -> hs -> java -> pl -> lua -> php -> rs -> ps -> rb -> go -> js -> py (1 laps)
+PASS ring: py (2 laps)
+PASS ring: js (2 laps)
+PASS ring: go (2 laps)
+PASS ring: rb (2 laps)
+PASS ring: ps (2 laps)
+PASS ring: rs (2 laps)
+PASS ring: php (2 laps)
+PASS ring: lua (2 laps)
+PASS ring: pl (2 laps)
+PASS ring: java (2 laps)
+PASS ring: hs (2 laps)
+PASS ring: c (2 laps)
+PASS ring: kt (2 laps)
+PASS mixed graph: 4 executed edges and rejection of unconfigured destination
+STRATEGY record_callable
+PASS network: py,js,go,rb,ps,rs,php,lua,pl,java,hs,c,kt (182 executions)
+PASS ring: py -> js -> go -> rb -> ps -> rs -> php -> lua -> pl -> java -> hs -> c -> kt (1 laps)
+PASS ring: c -> go -> hs -> java -> js -> kt -> lua -> php -> pl -> ps -> py -> rb -> rs (1 laps)
+PASS ring: kt -> c -> hs -> java -> pl -> lua -> php -> rs -> ps -> rb -> go -> js -> py (1 laps)
+PASS ring: py (2 laps)
+PASS ring: js (2 laps)
+PASS ring: go (2 laps)
+PASS ring: rb (2 laps)
+PASS ring: ps (2 laps)
+PASS ring: rs (2 laps)
+PASS ring: php (2 laps)
+PASS ring: lua (2 laps)
+PASS ring: pl (2 laps)
+PASS ring: java (2 laps)
+PASS ring: hs (2 laps)
+PASS ring: c (2 laps)
+PASS ring: kt (2 laps)
+PASS mixed graph: 4 executed edges and rejection of unconfigured destination
+STRATEGY marker_map
+PASS network: py,js,go,rb,ps,rs,php,lua,pl,java,hs,c,kt (182 executions)
+PASS ring: py -> js -> go -> rb -> ps -> rs -> php -> lua -> pl -> java -> hs -> c -> kt (1 laps)
+PASS ring: c -> go -> hs -> java -> js -> kt -> lua -> php -> pl -> ps -> py -> rb -> rs (1 laps)
+PASS ring: kt -> c -> hs -> java -> pl -> lua -> php -> rs -> ps -> rb -> go -> js -> py (1 laps)
+PASS ring: py (2 laps)
+PASS ring: js (2 laps)
+PASS ring: go (2 laps)
+PASS ring: rb (2 laps)
+PASS ring: ps (2 laps)
+PASS ring: rs (2 laps)
+PASS ring: php (2 laps)
+PASS ring: lua (2 laps)
+PASS ring: pl (2 laps)
+PASS ring: java (2 laps)
+PASS ring: hs (2 laps)
+PASS ring: c (2 laps)
+PASS ring: kt (2 laps)
+PASS mixed graph: 4 executed edges and rejection of unconfigured destination
+PASS mixed packed strategies and incompatible-protocol rejection
+ALL STRATEGIES PASS: 1258 successful emitted-program executions
+
+DEFAULT REGRESSION
+PASS order parsing, dependency failures, missing destination, reordered linking
+PASS mixed graph: 4 executed edges and rejection of unconfigured destination
+PASS network: py,js,go,rb,ps,rs,php,lua,pl,java,hs,c,kt (182 executions)
+PASS network: py,js (6 executions)
+PASS network: go,ps (6 executions)
+PASS network: py (2 executions)
+PASS network: rb,py (6 executions)
+PASS network: ps (2 executions)
+PASS network: rs (2 executions)
+PASS network: php (2 executions)
+PASS network: rs,php (6 executions)
+PASS network: py,rs,php (12 executions)
+ALL NETWORK PASS: 226 executions
+PASS ring: py -> js -> go -> rb -> ps -> rs -> php -> lua -> pl -> java -> hs -> c -> kt (2 laps)
+PASS ring: c -> go -> hs -> java -> js -> kt -> lua -> php -> pl -> ps -> py -> rb -> rs (1 laps)
+PASS ring: kt -> ps -> rb -> java -> js -> c -> rs -> go -> lua -> pl -> php -> py -> hs (1 laps)
+PASS ring: kt -> c -> hs -> java -> pl -> lua -> php -> rs -> ps -> rb -> go -> js -> py (1 laps)
+PASS ring: py (2 laps)
+PASS ring: js (2 laps)
+PASS ring: go (2 laps)
+PASS ring: rb (2 laps)
+PASS ring: ps (2 laps)
+PASS ring: rs (2 laps)
+PASS ring: php (2 laps)
+PASS ring: lua (2 laps)
+PASS ring: pl (2 laps)
+PASS ring: java (2 laps)
+PASS ring: hs (2 laps)
+PASS ring: c (2 laps)
+PASS ring: kt (2 laps)
+ALL RINGS PASS: 91 executed hops
+SIZE: network 409597, ring 215705 bytes
+
+C SANITIZERS
+PASS C sanitizers: packed_index
+PASS C sanitizers: packed_map
+PASS C sanitizers: record_key
+PASS C sanitizers: record_callable
+PASS C sanitizers: marker_map
+ALL C MEMORY CHECKS PASS: 20 executions; leak detection disabled by default
+
+C compiler: GCC 14.2.0; Kotlin 2.1.21; OpenJDK 21.0.13.
+Dockerfile: error-level lint passed; image execution remains unverified.

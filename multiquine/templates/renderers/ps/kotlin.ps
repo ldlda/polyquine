@@ -1,0 +1,2 @@
+# LDA_REQUIRES: json
+$RENDERERS['kotlin'] = { param([string]$s) ([string](& $RENDERERS['json'] $s)).Replace('$', '\$') }
